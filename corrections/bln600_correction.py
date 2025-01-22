@@ -36,4 +36,4 @@ if __name__ == "__main__":
     # save the corrected text to csv file
     sequences_df["Corrected Text"] = corrected_texts
     result_filepath = "/mnt/ceph_rbd/result.csv"
-    sequences_df.to_csv(result_filepath)
+    sequences_df.to_csv(result_filepath, index=False)
