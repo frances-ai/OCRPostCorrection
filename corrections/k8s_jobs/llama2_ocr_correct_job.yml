@@ -1,0 +1,34 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+    name: llama-ocr-correct-job
+    labels:
+        kueue.x-k8s.io/queue-name:  namespace-user-queue
+spec:
+    completions: 1
+    template:
+        metadata:
+            name: llama-ocr-correct-pod
+        spec:
+            restartPolicy: Never
+            containers:
+            - name: transformers-quantization-latest-gpu
+              image: huggingface/transformers-quantization-latest-gpu
+              command: ["python3"]
+              args: ["/mnt/ceph_rbd/llama2_13b_corrector.py"]
+              volumeMounts:
+                - mountPath: /mnt/ceph_rbd
+                  name: volume
+              resources:
+                requests:
+                  cpu: 2
+                  memory: "1Gi"
+                limits:
+                  cpu: 4
+                  memory: "4Gi"
+                  nvidia.com/gpu: 1
+            volumes:
+                - name: volume
+                  persistentVolumeClaim:
+                    claimName: llama-pvc
+

@@ -1,0 +1,13 @@
+jiwer
+requests
+tqdm
+transformers
+peft
+bitsandbytes
+accelerate
+numpy<2.0.0
+torch
+pandas
+nltk
+openai
+Levenshtein

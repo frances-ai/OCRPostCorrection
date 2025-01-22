@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+ name: lightweight-job
+ labels:
+  kueue.x-k8s.io/queue-name: namespace-user-queue
+spec:
+ completions: 1
+ parallelism: 1
+ template:
+  metadata:
+   name: lightweight-job
+  spec:
+   restartPolicy: Never
+   containers:
+   - name: data-loader
+     image: alpine/curl:latest
+     command: ['sh', '-c', "cd /mnt/ceph_rbd; curl https://archive.ics.uci.edu/static/public/53/iris.zip -o iris.zip"]
+     resources:
+      requests:
+       cpu: 1
+       memory: "1Gi"
+      limits:
+       cpu: 1
+       memory: "1Gi"
+     volumeMounts:
+     - mountPath: /mnt/ceph_rbd
+       name: volume
+   volumes:
+   - name: volume
+     persistentVolumeClaim:
+      claimName: template-workflow-pvc
