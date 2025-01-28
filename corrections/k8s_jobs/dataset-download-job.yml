@@ -1,19 +1,19 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-    name: lightweight-job
+    name: dataset-download-job
     labels:
         kueue.x-k8s.io/queue-name:  namespace-user-queue
 spec:
     completions: 1
     template:
         metadata:
-            name: lightweight-pod
+            name: dataset-download-pod
         spec:
             containers:
             - name: data-loader
-              image: busybox
-              args: ["sleep", "infinity"]
+              image: alpine/curl:latest
+              command: ['sh', '-c', "cd /mnt/ceph_rbd; curl https://raw.githubusercontent.com/Shef-AIRE/llms_post-ocr_correction/refs/heads/main/data/test.csv -o test.csv"]
               resources:
                     requests:
                         cpu: 1

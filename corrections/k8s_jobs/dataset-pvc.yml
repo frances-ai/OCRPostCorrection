@@ -1,32 +1,11 @@
-apiVersion: batch/v1
-kind: Job
+kind: PersistentVolumeClaim
+apiVersion: v1
 metadata:
- name: dataset-pvc-job
- labels:
-  kueue.x-k8s.io/queue-name: namespace-user-queue
+    name: dataset-pvc
 spec:
- completions: 1
- parallelism: 1
- template:
-  metadata:
-   name: dataset-pvc-job
-  spec:
-   restartPolicy: Never
-   containers:
-   - name: data-loader
-     image: alpine/curl:latest
-     command: ['sh', '-c', "cd /mnt/ceph_rbd; curl https://raw.githubusercontent.com/Shef-AIRE/llms_post-ocr_correction/refs/heads/main/data/test.csv -o test.csv"]
-     resources:
-      requests:
-       cpu: 1
-       memory: "1Gi"
-      limits:
-       cpu: 1
-       memory: "1Gi"
-     volumeMounts:
-     - mountPath: /mnt/ceph_rbd
-       name: volume
-   volumes:
-   - name: volume
-     persistentVolumeClaim:
-      claimName: dataset-pvc
+    accessModes:
+        - ReadWriteOnce
+    resources:
+        requests:
+            storage: 2Gi
+    storageClassName: csi-rbd-sc
