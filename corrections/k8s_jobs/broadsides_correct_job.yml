@@ -13,7 +13,7 @@ spec:
             containers:
             - name: transformers-pytorch-gpu
               image: huggingface/transformers-quantization-latest-gpu
-              command: [ 'sh', '-c', "python3 /code/OCRPostCorrection/corrections/bln600_articles_correction.py hf_token" ]
+              command: [ 'sh', '-c', "python3 /code/OCRPostCorrection/corrections/broadsides_correction.py hf_token" ]
               volumeMounts:
                 - mountPath: /mnt/ceph_rbd
                   name: volume
