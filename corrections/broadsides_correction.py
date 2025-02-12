@@ -31,7 +31,7 @@ if __name__ == "__main__":
     logging.info(f"creating subset of broadsides from {from_index} to {to_index}")
     broadsides_df = broadsides_df.iloc[from_index:to_index]
     logging.info(f"{len(broadsides_df)} broadsides will be corrected")
-    broadsides_sentences = broadsides_df["sentence"].tolist()
+    broadsides_sentences = broadsides_df["sentences"].tolist()
 
     # initialise corrector
     logging.info("Initialising corrector.....")
