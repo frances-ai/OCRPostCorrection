@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+    name: dataset-download-job
+    labels:
+        kueue.x-k8s.io/queue-name:  namespace-user-queue
+spec:
+    completions: 1
+    template:
+        metadata:
+            name: dataset-download-pod
+        spec:
+            containers:
+            - name: data-loader
+              image: alpine/curl:latest
+              command: ['sh', '-c', "cd /mnt/ceph_rbd; curl https://storage.googleapis.com/damon_public_files/dataframes/broadsides_sentences_df.json -o broadsides_sentences_df.json"]
+              resources:
+                    requests:
+                        cpu: 1
+                        memory: '1Gi'
+                    limits:
+                        cpu: 1
+                        memory: '1Gi'
+              volumeMounts:
+                    - mountPath: /mnt/ceph_rbd
+                      name: volume
+            restartPolicy: Never
+            volumes:
+                - name: volume
+                  persistentVolumeClaim:
+                    claimName: dataset-pvc
