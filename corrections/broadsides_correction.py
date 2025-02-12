@@ -55,5 +55,5 @@ if __name__ == "__main__":
 
     # save the corrected broadsides to dataframe
     broadsides_df["Corrected Sentences"] = total_corrected_sentences
-    result_filepath = "/mnt/ceph_rbd/broadsides_results_df.json"
+    result_filepath = f"/mnt/ceph_rbd/broadsides_results_df_{from_index}_{to_index}.json"
     broadsides_df.to_json(result_filepath, orient='index')
