@@ -1,7 +1,5 @@
 from openai import OpenAI
 
-from utils import chunk_text
-
 API_KEY = "your api key"
 
 class OpenAICorrector(object):
@@ -20,7 +18,7 @@ class OpenAICorrector(object):
         %s
         """
 
-    def correct_short_text(self, text):
+    def correct(self, text):
         completion = self.client.chat.completions.create(
             model=self.model_name,
             messages=[
@@ -32,14 +30,3 @@ class OpenAICorrector(object):
             ]
         )
         return completion.choices[0].message.content
-
-    def correct(self, text):
-        # chunk the text if it's too long
-        texts = chunk_text(text, max_tokens=30)
-
-        corrected_chunks = []
-        for text in texts:
-            corrected_chunk = self.correct_short_text(text)
-            corrected_chunks.append(corrected_chunk)
-
-        return ' '.join(corrected_chunks)
