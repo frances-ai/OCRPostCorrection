@@ -1,0 +1,52 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+    name: eb_sample_ocr_correct_job
+    labels:
+        kueue.x-k8s.io/queue-name:  namespace-user-queue
+spec:
+    completions: 1
+    parallelism: 1
+    template:
+        spec:
+            restartPolicy: Never
+            containers:
+            - name: transformers-pytorch-gpu
+              image: huggingface/transformers-quantization-latest-gpu
+              command: [ 'sh', '-c', "python3 /code/OCRPostCorrection/corrections/eb_sample_correction.py hf_token" ]
+              volumeMounts:
+                - mountPath: /mnt/ceph_rbd
+                  name: volume
+                - mountPath: /code
+                  name: github-code
+              resources:
+                requests:
+                  cpu: 10
+                  memory: "32Gi"
+                limits:
+                  cpu: 10
+                  memory: "40Gi"
+                  nvidia.com/gpu: 1
+            nodeSelector:
+              nvidia.com/gpu.product: NVIDIA-A100-SXM4-40GB
+            initContainers:
+            - name: lightweight-git-container
+              image: cicirello/alpine-plus-plus
+              command: [ 'sh', '-c', "cd /code; git clone https://github.com/frances-ai/OCRPostCorrection.git" ]
+              resources:
+                requests:
+                  cpu: 1
+                  memory: "2Gi"
+                limits:
+                  cpu: 1
+                  memory: "4Gi"
+              volumeMounts:
+                - mountPath: /code
+                  name: github-code
+            volumes:
+                - name: volume
+                  persistentVolumeClaim:
+                    claimName: dataset-pvc
+                - name: github-code
+                  emptyDir:
+                    sizeLimit: 1Gi
