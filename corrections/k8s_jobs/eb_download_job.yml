@@ -1,14 +1,14 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-    name: eb_sample_download_job
+    name: eb-sample-download-job
     labels:
         kueue.x-k8s.io/queue-name:  namespace-user-queue
 spec:
     completions: 1
     template:
         metadata:
-            name: eb_sample_download_pod
+            name: eb-sample-download-pod
         spec:
             containers:
             - name: data-loader
