@@ -1,0 +1,59 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+    name: instruction-tune-job
+    labels:
+        kueue.x-k8s.io/queue-name:  namespace-user-queue
+spec:
+    completions: 1
+    parallelism: 1
+    template:
+        spec:
+            restartPolicy: Never
+            containers:
+            - name: transformers-pytorch-gpu
+              image: huggingface/transformers-quantization-latest-gpu
+              env:
+                - name: HUGGING_FACE_HUB_TOKEN
+                  value: 'your_hugging_face_token'
+                - name: WANDB_API_KEY
+                  value: "your_wandb_api_key"
+              command: [ 'sh', '-c', "python3 /code/OCRPostCorrection/corrections/finetune/instruction_tune.py",
+                         '--model_name', 'meta-llama/llama-2-13b-hf', '--data', 'train.json',
+                         '--output_dir', 'llama-2-13b-ocr', '--config', 'config.yaml']
+              volumeMounts:
+                - mountPath: /mnt/ceph_rbd
+                  name: volume
+                - mountPath: /code
+                  name: github-code
+              resources:
+                requests:
+                  cpu: 12
+                  memory: "32Gi"
+                limits:
+                  cpu: 16
+                  memory: "48Gi"
+                  nvidia.com/gpu: 1
+            nodeSelector:
+              nvidia.com/gpu.product: NVIDIA-A100-SXM4-40GB
+            initContainers:
+            - name: lightweight-git-container
+              image: cicirello/alpine-plus-plus
+              command: [ 'sh', '-c', "cd /code; git clone https://github.com/frances-ai/OCRPostCorrection.git" ]
+              resources:
+                requests:
+                  cpu: 1
+                  memory: "2Gi"
+                limits:
+                  cpu: 1
+                  memory: "4Gi"
+              volumeMounts:
+                - mountPath: /code
+                  name: github-code
+            volumes:
+                - name: volume
+                  persistentVolumeClaim:
+                    claimName: dataset-pvc
+                - name: github-code
+                  emptyDir:
+                    sizeLimit: 1Gi
