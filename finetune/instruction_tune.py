@@ -13,6 +13,7 @@ from transformers import BitsAndBytesConfig, AutoModelForCausalLM, AutoTokenizer
 logging.basicConfig(level=logging.INFO)
 
 def format_instruction(sample):
+    print(sample)
     return f"""### Instruction:
 Fix the OCR errors in the provided text.
 
