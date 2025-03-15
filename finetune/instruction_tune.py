@@ -79,7 +79,7 @@ def main(args):
     output_dir = os.path.join("/mnt/ceph_rbd", args.output_dir)
     data_filepath = os.path.join("/mnt/ceph_rbd", args.data)
     logging.info(f"Loading training data from {data_filepath}...")
-    train_dataset = pd.read_json(data_filepath, orient='index')
+    train_dataset = pd.read_json(data_filepath, orient="records", lines=True)
     train_dataset = Dataset.from_pandas(train_dataset)
 
     # Setup SFTTrainer
