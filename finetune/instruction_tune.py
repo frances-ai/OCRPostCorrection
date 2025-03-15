@@ -104,7 +104,7 @@ def main(args):
     }
 
     if config and "sft_config" in config:
-        sft_config = config['sft_configs']
+        sft_config = config['sft_config']
         sft_config['learning_rate'] = float(sft_config['learning_rate'])
     else:
         sft_config = default_sft_config
