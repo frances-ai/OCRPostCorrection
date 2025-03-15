@@ -26,7 +26,8 @@ Fix the OCR errors in the provided text.
 def main(args):
 
     # load config from yaml file
-    with open(args.config, 'r') as f:
+    config_filepath = os.path.join("/mnt/ceph_rbd", args.config)
+    with open(config_filepath, 'r') as f:
         config = yaml.safe_load(f)
 
     if config and 'use_flash_attention' in config:

@@ -11,8 +11,8 @@ spec:
         spec:
             restartPolicy: Never
             containers:
-            - name: transformers-pytorch-gpu
-              image: huggingface/transformers-quantization-latest-gpu
+            - name: finetune
+              image: damonyudocker/finetune
               env:
                 - name: HUGGING_FACE_HUB_TOKEN
                   value: 'your_hugging_face_token'
