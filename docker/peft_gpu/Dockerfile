@@ -14,7 +14,7 @@ ARG PYTORCH='2.6.0'
 ARG CUDA='cu126'
 
 RUN apt update
-RUN apt install -y git libsndfile1-dev tesseract-ocr espeak-ng python3 python3-pip ffmpeg
+RUN apt install -y git tesseract-ocr python3 python3-pip
 RUN python3 -m pip install --no-cache-dir --upgrade pip
 
 ARG REF=main
