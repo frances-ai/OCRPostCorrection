@@ -1,0 +1,36 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+    name: finetune-download-job
+    labels:
+        kueue.x-k8s.io/queue-name:  eidf166ns-user-queue
+spec:
+    completions: 1
+    template:
+        metadata:
+            name: finetune-download-pod
+        spec:
+            containers:
+            - name: data-loader
+              image: alpine/curl:latest
+              command: ['sh', '-c']
+              args:
+                - |
+                  cd /mnt/ceph_rbd; 
+                  curl https://storage.googleapis.com/damon_public_files/dataframes/train.json -o train.json
+                  curl https://storage.googleapis.com/damon_public_files/finetune/config.yaml -o config.yaml
+              resources:
+                    requests:
+                        cpu: 1
+                        memory: '1Gi'
+                    limits:
+                        cpu: 1
+                        memory: '1Gi'
+              volumeMounts:
+                    - mountPath: /mnt/ceph_rbd
+                      name: volume
+            restartPolicy: Never
+            volumes:
+                - name: volume
+                  persistentVolumeClaim:
+                    claimName: finetune-pvc

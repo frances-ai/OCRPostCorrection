@@ -10,10 +10,8 @@ from correctors.pykale_llama_corrector import PykaleLlamaCorrector
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     parser = argparse.ArgumentParser()
-    parser.add_argument("hf_token", help="Huggingface token")
     parser.add_argument("from_index", help="the first broadside to be corrected", default=0)
     parser.add_argument("to_index", help="the last broadside to be corrected", default=1726)
-    hf_token = parser.parse_args().hf_token
     from_index = parser.parse_args().from_index
     to_index = parser.parse_args().to_index
 
@@ -36,7 +34,7 @@ if __name__ == "__main__":
     # initialise corrector
     logging.info("Initialising corrector.....")
     model_name = "pykale/llama-2-13b-ocr"
-    corrector = PykaleLlamaCorrector(model_name, hf_token)
+    corrector = PykaleLlamaCorrector(model_name)
 
     # correcting text from sequences_ocr_text
     logging.info("Correcting ocr text in broadsides .......")

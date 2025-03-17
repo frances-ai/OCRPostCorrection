@@ -9,8 +9,6 @@ from correctors.pykale_llama_corrector import PykaleLlamaCorrector
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     parser = argparse.ArgumentParser()
-    parser.add_argument("hf_token", help="Huggingface token")
-    hf_token = parser.parse_args().hf_token
 
     # load sequences from dataset volume
     logging.info("Loading sequences ....")
@@ -29,7 +27,7 @@ if __name__ == "__main__":
     # initialise corrector
     logging.info("Initialising corrector.....")
     model_name = "pykale/llama-2-13b-ocr"
-    corrector = PykaleLlamaCorrector(model_name, hf_token)
+    corrector = PykaleLlamaCorrector(model_name)
 
     # correcting text from articles_ocr_text
     logging.info("Correcting ocr text.......")

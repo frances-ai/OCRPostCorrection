@@ -9,8 +9,6 @@ from correctors.pykale_llama_corrector import PykaleLlamaCorrector
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     parser = argparse.ArgumentParser()
-    parser.add_argument("hf_token", help="Huggingface token")
-    hf_token = parser.parse_args().hf_token
 
     # load sequences from dataset volume
     logging.info("Loading sequences ....")

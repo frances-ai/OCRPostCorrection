@@ -53,7 +53,7 @@ spec:
             volumes:
                 - name: volume
                   persistentVolumeClaim:
-                    claimName: dataset-pvc
+                    claimName: finetune-pvc
                 - name: github-code
                   emptyDir:
                     sizeLimit: 1Gi

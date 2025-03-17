@@ -7,7 +7,7 @@ logging.basicConfig(level=logging.INFO)
 
 class PykaleLlamaCorrector(object):
 
-    def __init__(self, model_name, token):
+    def __init__(self, model_name):
         # Check if CUDA is available
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         logging.info(f"Using device: {self.device}")
@@ -20,11 +20,10 @@ class PykaleLlamaCorrector(object):
             bnb_4bit_compute_dtype=torch.bfloat16
         )
 
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name, token=token)
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.model = AutoPeftModelForCausalLM.from_pretrained(
             model_name,
             device_map="auto",
-            token=token,
             quantization_config=bnb_config,
             torch_dtype=torch.float16,
             low_cpu_mem_usage=True)
