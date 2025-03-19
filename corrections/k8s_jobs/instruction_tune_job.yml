@@ -18,9 +18,10 @@ spec:
                   value: 'your_hugging_face_token'
                 - name: WANDB_API_KEY
                   value: "your_wandb_api_key"
-              command: [ 'sh', '-c', "python3 /code/OCRPostCorrection/corrections/finetune/instruction_tune.py",
-                         '--model_name', 'meta-llama/llama-2-13b-hf', '--data', 'train.json',
-                         '--output_dir', 'llama-2-13b-ocr', '--config', 'config.yaml']
+              command: [ 'sh', '-c']
+              args: [
+                      "python3 /code/OCRPostCorrection/finetune/instruction_tune.py --model_name meta-llama/llama-2-13b-hf --data train.json --output_dir llama-2-13b-ocr --repo_name llama-ocr --config config.yaml"
+              ]
               volumeMounts:
                 - mountPath: /mnt/ceph_rbd
                   name: volume

@@ -129,6 +129,11 @@ def main(args):
 
     logging.info(f"Saving model to {output_dir} ...")
     trainer.save_model(args.output_dir)
+
+    repo_name = args.repo_name
+    logging.info(f"Uploading model to huggingface hub in this repo: {output_dir} ...")
+    trainer.model.push_to_hub(repo_name)
+    tokenizer.push_to_hub(repo_name)
     logging.info("Done.")
 
 
@@ -138,6 +143,7 @@ if __name__ == '__main__':
     parser.add_argument('--model_name', type=str, help='Name of model', required=True)
     parser.add_argument('--data', type=str, help='Path to training dataset', required=True)
     parser.add_argument('--output_dir', type=str, help='Path to output directory', required=True)
+    parser.add_argument("--repo_name", type=str, help="Name of huggingface repo", required=True)
     parser.add_argument('--config', type=str, help='Path to config yaml file')
     args = parser.parse_args()
 
