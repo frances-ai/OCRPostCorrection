@@ -26,10 +26,11 @@ if __name__ == "__main__":
     broadsides_filepath = "/mnt/ceph_rbd/eb_sample_noisy.txt"
     eb_noisy_samples = open(broadsides_filepath).readlines()
     logging.info(f"{len(eb_noisy_samples)} eb samples loaded")
+    eb_noisy_samples = eb_noisy_samples[from_index:to_index]
     logging.info(f"creating subset of eb samples from {from_index} to {to_index}")
 
     # initialise corrector
-    logging.info("Initialising corrector.....")
+    logging.info(f"Initialising corrector with model: {model_name}.....")
     corrector = LlamaCorrector(model_name)
 
     # correcting text from eb noisy samples
