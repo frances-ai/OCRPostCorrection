@@ -1,6 +1,7 @@
 import argparse
 import logging
 from tqdm import tqdm
+import pandas as pd
 
 from correctors.llama_corrector import LlamaCorrector
 
@@ -23,11 +24,12 @@ if __name__ == "__main__":
 
     # load broadsides
     logging.info("Loading  eb noisy samples....")
-    broadsides_filepath = "/mnt/ceph_rbd/eb_sample_noisy.txt"
-    eb_noisy_samples = open(broadsides_filepath).readlines()
-    logging.info(f"{len(eb_noisy_samples)} eb samples loaded")
-    eb_noisy_samples = eb_noisy_samples[from_index:to_index]
+    eb_filepath = "/mnt/ceph_rbd/eb_samples.json"
+    eb_samples_df = pd.read_json(eb_filepath, orient="records", lines=True)
+    logging.info(f"{len(eb_samples_df)} eb samples loaded")
     logging.info(f"creating subset of eb samples from {from_index} to {to_index}")
+    eb_samples_df = eb_samples_df.iloc[from_index:to_index]
+    eb_noisy_samples = eb_samples_df['ocr text'].tolist()
 
     # initialise corrector
     logging.info(f"Initialising corrector with model: {model_name}.....")
@@ -41,9 +43,9 @@ if __name__ == "__main__":
 
     logging.info("eb noisy samples corrected!")
 
-    # save the corrected broadsides to dataframe
-    logging.info("save corrected text to")
-    result_filepath = f"/mnt/ceph_rbd/eb_sample_corrected_{from_index}_{to_index}.txt"
-    logging.info(f"save corrected text to {result_filepath}")
-    with open(result_filepath, "w") as f:
-        f.write("\n".join(corrected_text))
+    # save the corrected eb to dataframe
+    eb_samples_df['corrected'] = corrected_text
+    result_filepath = f"/mnt/ceph_rbd/eb_samples_corrected_{from_index}_{to_index}.json"
+    logging.info(f"save dataframe with corrected text to {result_filepath}")
+    eb_samples_df.to_json(result_filepath, orient="records", lines=True)
+    logging.info('Done!')

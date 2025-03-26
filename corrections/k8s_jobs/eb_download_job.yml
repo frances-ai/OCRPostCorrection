@@ -13,7 +13,12 @@ spec:
             containers:
             - name: data-loader
               image: alpine/curl:latest
-              command: ['sh', '-c', "cd /mnt/ceph_rbd; curl https://storage.googleapis.com/damon_public_files/dataframes/eb_sample_noisy.txt -o eb_sample_noisy.txt"]
+              command: ['sh', '-c']
+              args:
+                - |
+                  cd /mnt/ceph_rbd; 
+                  rm eb_samples.json;
+                  curl https://storage.googleapis.com/damon_public_files/dataframes/eb_samples.json -o eb_samples.json
               resources:
                     requests:
                         cpu: 1
