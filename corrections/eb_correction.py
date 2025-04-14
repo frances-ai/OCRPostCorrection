@@ -39,7 +39,7 @@ if __name__ == "__main__":
     # correcting text from eb noisy samples
     logging.info("Correcting ocr text in eb low quality descriptions .......")
     total_corrected_chunks = []
-    for eb_text, offsets in tqdm(zip(eb_lq_descriptions, eb_desc_chunks_offsets)):
+    for eb_text, offsets in zip(tqdm(eb_lq_descriptions), eb_desc_chunks_offsets):
         corrected_chunks = []
         for offset in offsets:
             corrected_chunk = corrector.correct(eb_text[offset['start']:offset['end']])
