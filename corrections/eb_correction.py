@@ -29,6 +29,7 @@ if __name__ == "__main__":
     logging.info(f"{len(eb_articles_df)} eb articles loaded")
     logging.info(f"creating subset of eb samples from {from_index} to {to_index}")
     eb_articles_df = eb_articles_df.iloc[from_index:to_index]
+    eb_term_names = eb_articles_df['name'].tolist()
     eb_lq_descriptions = eb_articles_df['lq_description'].tolist()
     eb_desc_chunks_offsets = eb_articles_df['chunk_offsets'].tolist()
 
@@ -39,10 +40,14 @@ if __name__ == "__main__":
     # correcting text from eb noisy samples
     logging.info("Correcting ocr text in eb low quality descriptions .......")
     total_corrected_chunks = []
-    for eb_text, offsets in zip(tqdm(eb_lq_descriptions), eb_desc_chunks_offsets):
+    for eb_text, offsets, term_name in zip(tqdm(eb_lq_descriptions), eb_desc_chunks_offsets, eb_term_names):
         corrected_chunks = []
         for offset in offsets:
-            corrected_chunk = corrector.correct(eb_text[offset['start']:offset['end']])
+            if offset['start'] == 0:
+                text_to_be_corrected = term_name + ", " + eb_text[offset['start']:offset['end']]
+            else:
+                text_to_be_corrected = eb_text[offset['start']:offset['end']]
+            corrected_chunk = corrector.correct(text_to_be_corrected)
             corrected_chunks.append(corrected_chunk)
         total_corrected_chunks.append(corrected_chunks)
 
